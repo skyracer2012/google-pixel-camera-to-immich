@@ -1,0 +1,35 @@
+name: Build
+
+on:
+  push:
+    branches:
+    - master
+    - release/*
+  workflow_dispatch:
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v7
+
+      - name: Setup Java
+        uses: actions/setup-java@v5.7.0
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
+      
+      - name: Build APK with Gradle
+        run: ./gradlew assembleRelease
+
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: GooglePixelCameraToImmich
+          path: app/build/outputs/apk/release/*.apk
