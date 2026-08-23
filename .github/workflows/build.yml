@@ -3,8 +3,10 @@ name: Build
 on:
   push:
     branches:
-    - master
-    - release/*
+      - master
+      - release/*
+    tags:
+      - 'v*'
   workflow_dispatch:
 
 
