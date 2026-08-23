@@ -13,12 +13,9 @@ android {
         applicationId = "com.google.android.apps.photos"
         minSdk = 35
         targetSdk = 37
-        versionCode = providers.gradleProperty("versionCode")
-            .map(String::toInt)
-            .orElse(1)
+        versionCode = providers.gradleProperty("versionCode").map(String::toInt).getOrElse(1)
     
-        versionName = providers.gradleProperty("versionName")
-            .orElse("0.0.0-dev")
+        versionName = providers.gradleProperty("versionName").getOrElse("0.0.0-dev")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
