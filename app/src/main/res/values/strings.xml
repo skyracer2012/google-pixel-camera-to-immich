@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Google Pixel Camera To Immich</string>
+    <string name="app_description">Redirects photos and videos from Google Camera to Immich.</string>
+    <string name="app_git_url">https://github.com/skyracer2012/todo</string>
+
+    <string name="error_title">Could not open Immich</string>
+    <string name="error_immich_not_installed">Immich is not installed.</string>
+    <string name="error_immich_start">Internal error during startup of Immich.</string>
+
+    <string name="source_code">Open source</string>
+    <string name="git_provider">GitHub</string>
 </resources>
