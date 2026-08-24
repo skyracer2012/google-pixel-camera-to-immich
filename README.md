@@ -30,6 +30,17 @@ The app is a simple gradlew android studio app. You can build it using
 ```
 
 For release builds, set these environment variables: `KEYSTORE_FILE`, `KEYSTORE_PASSWORD`, `KEY_ALIAS`, `KEY_PASSWORD`.
+
+## Verify APK
+
+You can check that the APK using the SHA-256 of the keystore for the signing certificate:
+
+```
+48:D8:54:95:78:1B:81:73:55:8D:00:9D:66:B7:AC:04:A8:56:DF:15:A5:E2:73:55:71:C4:9C:73:A7:2D:EE:20
+```
+
+To check the certificate of the downloaded APK you can use `apksigner verify --print-certs GooglePixelCameraToImmich-v*.apk`
+
 ## Technical Details
 
 <details>
