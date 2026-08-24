@@ -4,10 +4,9 @@ With this app you can redirect the thumbnail of the [Google Pixel Camera](https:
 By default, the Camera requires you to have [Google Photos](https://play.google.com/store/apps/details?id=com.google.android.apps.photos) installed. It doesn't provide a way to view Images or Videos you took without it.
 
 This app fixes this Problem. It spoofs being Google Images and hooks your preview request to open the Image you want to see in Immich.  
-Here is how the Google Camera app looks before:
+Here is how the Google Camera app looks without having Google Photos installed:
 
-
-![Google Camera showing the Photos required error](readme-assets/google-camera-error.png | width=100)
+<img src="readme-assets/google-camera-error.png" alt="Google Camera showing the Photos required error" width="250">
 
 ## Installation
 
