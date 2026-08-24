@@ -54,3 +54,6 @@ adb shell am start \
 This app was inspired by [google-pixel-camera-redirect](https://github.com/nermolov/google-pixel-camera-redirect) by [@nermolov](https://github.com/nermolov) (MIT License).  
 They implemented the core redirection logic, but it lacks the opening of the correct image in Immich, which this app provides. As far as I can see they also listen for the wrong intent and don't provide a pre-compiled APK.  
 I used their example Image of the Error you get if you don't have Google Photos installed above.
+
+After release of this project I found [Gcam-Services-Provider](https://github.com/lukaspieper/Gcam-Services-Provider/tree/main). They seem to offer the same functionality with your default gallery app as long as you use their "photosonly" variant.  
+This Repository will however always open Immich, no matter your default app alongside Error Handling if something goes wrong.

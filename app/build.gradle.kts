@@ -26,7 +26,7 @@ android {
         applicationId = "com.google.android.apps.photos"
         minSdk = 35
         targetSdk = 37
-        versionCode = providers.gradleProperty("versionCode").map(String::toInt).getOrElse(1)
+        versionCode = providers.gradleProperty("versionCode").map(String::toInt).getOrElse(1) + 900000000
     
         versionName = providers.gradleProperty("versionName").getOrElse("0.0.0-dev")
 
