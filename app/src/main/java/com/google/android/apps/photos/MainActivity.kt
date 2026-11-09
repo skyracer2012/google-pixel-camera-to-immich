@@ -41,19 +41,33 @@ class MainActivity : ComponentActivity() {
         Log.d(LOG_TAG, "MainActivity entry")
 
         setShowWhenLocked(true)
+        setTurnScreenOn(true)
 
         val keyguardManager = getSystemService(KeyguardManager::class.java)
 
-        if (!keyguardManager.isKeyguardLocked) {
+        if (keyguardManager == null || !keyguardManager.isKeyguardLocked) {
             openImmichOrShowError()
             return
         }
 
-        keyguardManager.requestDismissKeyguard(this, object : KeyguardManager.KeyguardDismissCallback() {
-            override fun onDismissSucceeded() = openImmichOrShowError()
-            override fun onDismissCancelled() = finishAndRemoveTask()
-            override fun onDismissError() = showErrorUI(getString(R.string.error_unlock_failed))
-        })
+        window.decorView.post {
+            keyguardManager.requestDismissKeyguard(this, object : KeyguardManager.KeyguardDismissCallback() {
+                override fun onDismissSucceeded() {
+                    Log.d(LOG_TAG, "Keyguard dismiss succeeded")
+                    openImmichOrShowError()
+                }
+
+                override fun onDismissCancelled() {
+                    Log.d(LOG_TAG, "Keyguard dismiss cancelled")
+                    finishAndRemoveTask()
+                }
+
+                override fun onDismissError() {
+                    Log.e(LOG_TAG, "Keyguard dismiss error")
+                    showErrorUI(getString(R.string.error_unlock_failed))
+                }
+            })
+        }
     }
 
     private fun openImmichOrShowError() {
@@ -68,16 +82,24 @@ class MainActivity : ComponentActivity() {
 
         val immichLaunchIntent = packageManager.getLaunchIntentForPackage(IMMICH_PACKAGE)
 
-        if(immichLaunchIntent == null)
-        {
+        if (immichLaunchIntent == null) {
             Log.d(LOG_TAG, "Immich not existing $immichLaunchIntent")
             return getString(R.string.error_immich_not_installed)
         }
 
         val immichViewIntent = Intent(Intent.ACTION_VIEW).apply {
             setPackage(IMMICH_PACKAGE)
-            setDataAndType(intent.data, intent.type)
+            val uri = intent.data
+            val mimeType = intent.type
+            if (uri != null && mimeType != null) {
+                setDataAndType(uri, mimeType)
+            } else if (uri != null) {
+                data = uri
+            } else if (mimeType != null) {
+                type = mimeType
+            }
             addFlags(intent.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION))
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
         try {
@@ -89,9 +111,15 @@ class MainActivity : ComponentActivity() {
             Log.d(LOG_TAG, "Forwarded type: ${immichViewIntent.type}")
 
             finishAndRemoveTask()
-        }catch (e: ActivityNotFoundException){
-            Log.e(LOG_TAG, "Immich activity error", e)
-            return getString(R.string.error_immich_start)
+        } catch (e: ActivityNotFoundException) {
+            Log.w(LOG_TAG, "Immich ACTION_VIEW failed, falling back to launch intent", e)
+            try {
+                startActivity(immichLaunchIntent)
+                finishAndRemoveTask()
+            } catch (e2: Exception) {
+                Log.e(LOG_TAG, "Immich activity error", e2)
+                return getString(R.string.error_immich_start)
+            }
         }
 
         return null
