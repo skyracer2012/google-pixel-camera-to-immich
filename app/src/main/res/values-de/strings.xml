@@ -9,4 +9,5 @@
 
     <string name="source_code">Open Source</string>
     <string name="git_provider">GitHub</string>
+    <string name="error_unlock_failed">Das Gerät konnte nicht entsperrt werden.</string>
 </resources>

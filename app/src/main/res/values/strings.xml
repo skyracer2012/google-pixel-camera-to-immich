@@ -9,4 +9,5 @@
 
     <string name="source_code">Open source</string>
     <string name="git_provider">GitHub</string>
+    <string name="error_unlock_failed">Failed to unlock Device.</string>
 </resources>

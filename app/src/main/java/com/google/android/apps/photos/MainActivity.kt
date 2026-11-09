@@ -1,7 +1,6 @@
 package com.google.android.apps.photos
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ErrorOutline
+import android.app.KeyguardManager
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +14,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ErrorOutline
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,8 +25,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.google.android.apps.photos.ui.theme.GooglePixelCameraToImmichTheme
 import androidx.core.net.toUri
+import com.google.android.apps.photos.ui.theme.GooglePixelCameraToImmichTheme
+
 
 class MainActivity : ComponentActivity() {
     companion object {
@@ -38,10 +40,25 @@ class MainActivity : ComponentActivity() {
 
         Log.d(LOG_TAG, "MainActivity entry")
 
-        val status = openImmich()
-        Log.e(LOG_TAG, "Immich open status: $status")
+        setShowWhenLocked(true)
 
-        if (status !== null) {
+        val keyguardManager = getSystemService(KeyguardManager::class.java)
+
+        if (!keyguardManager.isKeyguardLocked) {
+            openImmichOrShowError()
+            return
+        }
+
+        keyguardManager.requestDismissKeyguard(this, object : KeyguardManager.KeyguardDismissCallback() {
+            override fun onDismissSucceeded() = openImmichOrShowError()
+            override fun onDismissCancelled() = finishAndRemoveTask()
+            override fun onDismissError() = showErrorUI(getString(R.string.error_unlock_failed))
+        })
+    }
+
+    private fun openImmichOrShowError() {
+        val status = openImmich()
+        if (status != null) {
             showErrorUI(status)
         }
     }
